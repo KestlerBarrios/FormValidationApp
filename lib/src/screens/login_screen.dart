@@ -1,96 +1,97 @@
 import 'package:flutter/material.dart';
-import 'package:form_validation/src/widgets/background.dart';
-import 'package:form_validation/src/widgets/buttonCustom.dart';
+import 'package:form_validation/src/ui/input_decorations.dart';
+import 'package:form_validation/src/widgets/widgets.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Background(),
-          _loginForm(context),
-        ],
-      ),
+      body: AuthBackground(
+          child: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 250,
+            ),
+            CardContainer(
+              child: Column(
+                children: [
+                  SizedBox(height: 10),
+                  Text('Login', style: Theme.of(context).textTheme.headline5),
+                  SizedBox(height: 30),
+                  LoginForm()
+                ],
+              ),
+            ),
+            SizedBox(height: 50),
+            Text('Crear una nueva cuenta'),
+            SizedBox(height: 50)
+          ],
+        ),
+      )),
     );
   }
+}
 
-  Widget _loginForm(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          SafeArea(
-              child: Container(
-            height: 180,
-          )),
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 50.0),
-            margin: EdgeInsets.symmetric(vertical: 30.0),
-            width: size.width * 0.85,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 3.0,
-                  offset: Offset(0.0, 5.0),
-                  spreadRadius: 3.0,
-                ),
-              ],
-            ),
-            child: Column(
-              children: [
-                Text(
-                  'Ingreso',
-                  style: TextStyle(fontSize: 20.0),
-                ),
-                SizedBox(height: 40.0),
-                _crearEmail(),
-                _crearPassword(),
-                ButtonCustom()
-              ],
-            ),
-          ),
-          Text('¿Olvido la contraseña?'),
-          SizedBox(
-            height: 100.0,
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _crearEmail() {
+class LoginForm extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      child: TextField(
-        keyboardType: TextInputType.emailAddress,
-        decoration: InputDecoration(
-            icon: Icon(
-              Icons.alternate_email,
+      child: Form(
+        // TODO: Mantener la referncia al key
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        child: Column(
+          children: [
+            TextFormField(
+              autocorrect: false,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecorations.authInputDecoration(
+                hintText: 'correo@gmail.com',
+                labelText: 'Correo Electronico',
+                prefixIcon: Icons.alternate_email,
+              ),
+              validator: (value) {
+                String pattern =
+                    r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+
+                RegExp regExp = new RegExp(pattern);
+                return regExp.hasMatch(value ?? '') ? null : 'Correo Invalido';
+              },
+            ),
+            SizedBox(height: 30),
+            TextFormField(
+              autocorrect: false,
+              obscureText: true,
+              decoration: InputDecorations.authInputDecoration(
+                hintText: '*******',
+                labelText: 'Contraseña',
+                prefixIcon: Icons.lock_outline,
+              ),
+              validator: (value) {
+                return (value != null && value.length >= 6)
+                    ? null
+                    : 'Contraseña muy corta';
+              },
+            ),
+            SizedBox(height: 30),
+            MaterialButton(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              disabledColor: Colors.grey,
+              elevation: 0,
               color: Colors.deepPurple,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
+                child: Text(
+                  'Ingresar',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              onPressed: () {
+                //TODO: LOGIN
+              },
             ),
-            labelText: 'Correo Electronico',
-            hintText: 'ejemplo@correo.com'),
-      ),
-    );
-  }
-
-  Widget _crearPassword() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      child: TextField(
-        obscureText: true,
-        keyboardType: TextInputType.emailAddress,
-        decoration: InputDecoration(
-          icon: Icon(
-            Icons.lock_outline,
-            color: Colors.deepPurple,
-          ),
-          labelText: 'Contraseña',
+          ],
         ),
       ),
     );
