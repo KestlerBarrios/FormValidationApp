@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:form_validation/src/screens/screens.dart';
+import 'package:form_validation/src/ui/themeData.dart';
 
 void main() => runApp(MyApp());
 
@@ -9,14 +10,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Productos App',
-      initialRoute: '/login',
+      initialRoute: '/',
       routes: {
         '/': (BuildContext context) => HomeScreen(),
         '/login': (_) => LoginScreen(),
       },
-      theme: ThemeData.light().copyWith(
-        scaffoldBackgroundColor: Colors.grey[300],
-      ),
+      theme: themeDataCustom(),
     );
   }
 }
